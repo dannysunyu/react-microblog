@@ -1,17 +1,19 @@
 const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
 
 export default class MicroblogApiClient {
+  readonly base_url: string
+
   constructor() {
     this.base_url = BASE_API_URL + '/api';
   }
 
-  async request(options) {
+  async request(options: Options) {
     let query = new URLSearchParams(options.query || {}).toString();
     if (query !== '') {
       query = '?' + query;
     }
 
-    let response;
+    let response: any;
     try {
       response = await fetch(this.base_url + options.url + query, {
         method: options.method,
@@ -42,19 +44,27 @@ export default class MicroblogApiClient {
     };
   }
 
-  async get(url, query, options) {
-    return this.request({ method: 'GET', url, query, ...options });
+  async get(url: string, query: string, options: Options) {
+    return this.request({method: 'GET', url, query, ...options});
   }
 
-  async post(url, body, options) {
-    return this.request({ method: 'POST', url, body, ...options });
+  async post(url: string, body: string, options: Options) {
+    return this.request({method: 'POST', url, body, ...options});
   }
 
-  async put(url, body, options) {
-    return this.request({ method: 'PUT', url, body, ...options });
+  async put(url: string, body: string, options: Options) {
+    return this.request({method: 'PUT', url, body, ...options});
   }
 
-  async delete(url, options) {
-    return this.request({ method: 'DELETE', url, ...options });
+  async delete(url: string, options: Options) {
+    return this.request({method: 'DELETE', url, ...options});
   }
+}
+
+interface Options {
+  url: string,
+  query: string,
+  method: string,
+  headers: any,
+  body: any
 }
