@@ -7,6 +7,23 @@ export default class MicroblogApiClient {
     this.base_url = BASE_API_URL + '/api';
   }
 
+  async login(username: string, password: string) {
+    const response = await this.post('/tokens', null, {
+      headers: {
+        Authorization: 'Basic ' + btoa(username + ":" + password)
+      }
+    });
+    if (!response.ok) {
+      return response.status === 401 ? 'fail' : 'error';
+    }
+    localStorage.setItem('accessToken', response.body.access_token);
+    return 'ok';
+  }
+
+  isAuthenticated() {
+    return localStorage.getItem('accessToken') !== null;
+  }
+
   async request(options: Options) {
     let query = new URLSearchParams(options.query || {}).toString();
     if (query !== '') {
@@ -19,6 +36,7 @@ export default class MicroblogApiClient {
         method: options.method,
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
           ...options.headers,
         },
         body: options.body ? JSON.stringify(options.body) : null,
@@ -48,11 +66,11 @@ export default class MicroblogApiClient {
     return this.request({method: 'GET', url, query, ...options});
   }
 
-  async post(url: string, body: string, options: Options) {
+  async post(url: string, body: any, options: Options) {
     return this.request({method: 'POST', url, body, ...options});
   }
 
-  async put(url: string, body: string, options: Options) {
+  async put(url: string, body: any, options: Options) {
     return this.request({method: 'PUT', url, body, ...options});
   }
 
@@ -62,9 +80,9 @@ export default class MicroblogApiClient {
 }
 
 interface Options {
-  url: string,
-  query: string,
-  method: string,
-  headers: any,
-  body: any
+  url?: string,
+  query?: string,
+  method?: string,
+  headers?: any,
+  body?: any
 }
