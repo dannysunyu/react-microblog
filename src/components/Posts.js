@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
 import Post from "./Post.js";
 import { useApi } from "../contexts/ApiProvider";
-import More from './More';
+import More from "./More";
 import Write from "./Write";
-
 
 export default function Posts({ content, write }) {
   const [posts, setPosts] = useState();
@@ -13,13 +12,13 @@ export default function Posts({ content, write }) {
 
   let url;
   switch (content) {
-    case 'feed':
+    case "feed":
     case undefined:
-      url = '/feed';
+      url = "/feed";
       break;
-    case 'explore':
-      url = '/posts';
-      break
+    case "explore":
+      url = "/posts";
+      break;
     default:
       url = `/users/${content}/posts`;
       break;
@@ -39,7 +38,7 @@ export default function Posts({ content, write }) {
 
   const loadNextPage = async () => {
     const response = await api.get(url, {
-      after: posts[posts.length - 1].timestamp
+      after: posts[posts.length - 1].timestamp,
     });
     if (response.ok) {
       setPosts([...posts, ...response.body.data]);
@@ -54,24 +53,24 @@ export default function Posts({ content, write }) {
   return (
     <>
       {write && <Write showPost={showPost} />}
-      {posts === undefined ?
+      {posts === undefined ? (
         <Spinner animation="border" />
-        :
+      ) : (
         <>
-          {posts === null ?
+          {posts === null ? (
             <p>Could not retrieve blog posts.</p>
-            :
+          ) : (
             <>
-              {posts.length === 0 ?
+              {posts.length === 0 ? (
                 <p>There are no blog posts.</p>
-                :
-                posts.map(post => <Post key={post.id} post={post} />)
-              }
+              ) : (
+                posts.map((post) => <Post key={post.id} post={post} />)
+              )}
               <More pagination={pagination} loadNextPage={loadNextPage} />
             </>
-          }
+          )}
         </>
-      }
+      )}
     </>
   );
 }

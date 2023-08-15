@@ -1,13 +1,18 @@
-import Form from 'react-bootstrap/Form';
+import Form from "react-bootstrap/Form";
 
-export default function InputField(
-  { name, label, type, placeholder, error, fieldRef }
-) {
+export default function InputField({
+  name,
+  label,
+  type,
+  placeholder,
+  error,
+  fieldRef,
+}) {
   return (
     <Form.Group controlId={name} className="InputField">
       {label && <Form.Label>{label}</Form.Label>}
       <Form.Control
-        type={type || 'text'}
+        type={type || "text"}
         placeholder={placeholder}
         ref={fieldRef}
       />

@@ -1,42 +1,42 @@
 const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
 
 export default class MicroblogApiClient {
-  readonly base_url: string
+  readonly base_url: string;
 
   constructor() {
-    this.base_url = BASE_API_URL + '/api';
+    this.base_url = BASE_API_URL + "/api";
   }
 
   async login(username: string, password: string) {
-    const response = await this.post('/tokens', null, {
+    const response = await this.post("/tokens", null, {
       headers: {
-        Authorization: 'Basic ' + btoa(username + ":" + password)
-      }
+        Authorization: "Basic " + btoa(username + ":" + password),
+      },
     });
     if (!response.ok) {
-      return response.status === 401 ? 'fail' : 'error';
+      return response.status === 401 ? "fail" : "error";
     }
-    localStorage.setItem('accessToken', response.body.access_token);
-    return 'ok';
+    localStorage.setItem("accessToken", response.body.access_token);
+    return "ok";
   }
 
   async logout(): Promise<void> {
-    await this.delete('/tokens');
-    localStorage.removeItem('accessToken');
+    await this.delete("/tokens");
+    localStorage.removeItem("accessToken");
   }
 
   isAuthenticated() {
-    return localStorage.getItem('accessToken') !== null;
+    return localStorage.getItem("accessToken") !== null;
   }
 
   async request(options: Options): Promise<any> {
     let response = await this.requestInternal(options);
-    if (response.status === 401 && options.url !== '/tokens') {
-      const refreshResponse = await this.put('/tokens', {
-        access_token: localStorage.getItem('accessToken'),
+    if (response.status === 401 && options.url !== "/tokens") {
+      const refreshResponse = await this.put("/tokens", {
+        access_token: localStorage.getItem("accessToken"),
       });
       if (refreshResponse.ok) {
-        localStorage.setItem('accessToken', refreshResponse.body.access_token);
+        localStorage.setItem("accessToken", refreshResponse.body.access_token);
         response = await this.requestInternal(options);
       }
     }
@@ -45,8 +45,8 @@ export default class MicroblogApiClient {
 
   async requestInternal(options: Options) {
     let query = new URLSearchParams(options.query || {}).toString();
-    if (query !== '') {
-      query = '?' + query;
+    if (query !== "") {
+      query = "?" + query;
     }
 
     let response: any;
@@ -54,11 +54,11 @@ export default class MicroblogApiClient {
       response = await fetch(this.base_url + options.url + query, {
         method: options.method,
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
           ...options.headers,
         },
-        credentials: options.url === '/tokens' ? 'include' : 'omit',
+        credentials: options.url === "/tokens" ? "include" : "omit",
         body: options.body ? JSON.stringify(options.body) : null,
       });
     } catch (error) {
@@ -68,41 +68,41 @@ export default class MicroblogApiClient {
         json: async () => {
           return {
             code: 500,
-            message: 'The server is unresponsive',
+            message: "The server is unresponsive",
             description: error.toString(),
           };
-        }
+        },
       };
     }
 
     return {
       ok: response.ok,
       status: response.status,
-      body: response.status !== 204 ? await response.json() : null
+      body: response.status !== 204 ? await response.json() : null,
     };
   }
 
   async get(url: string, query: string, options: Options) {
-    return this.request({method: 'GET', url, query, ...options});
+    return this.request({ method: "GET", url, query, ...options });
   }
 
   async post(url: string, body: any, options: Options) {
-    return this.request({method: 'POST', url, body, ...options});
+    return this.request({ method: "POST", url, body, ...options });
   }
 
   async put(url: string, body: any, options?: Options) {
-    return this.request({method: 'PUT', url, body, ...options});
+    return this.request({ method: "PUT", url, body, ...options });
   }
 
   async delete(url: string, options?: Options) {
-    return this.request({method: 'DELETE', url, ...options});
+    return this.request({ method: "DELETE", url, ...options });
   }
 }
 
 interface Options {
-  url?: string,
-  query?: string,
-  method?: string,
-  headers?: any,
-  body?: any
+  url?: string;
+  query?: string;
+  method?: string;
+  headers?: any;
+  body?: any;
 }

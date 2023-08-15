@@ -1,16 +1,15 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { useNavigate } from "react-router-dom";
 import Body from "../components/Body";
 import InputField from "../components/InputField";
-import { useNavigate } from "react-router-dom";
 import { useApi } from "../contexts/ApiProvider";
 import { useFlash } from "../contexts/FlashProvider";
 
-export default function RegistrationPage() {
+export default function ChangePasswordPage() {
   const [formErrors, setFormErrors] = useState({});
-  const usernameField = useRef();
-  const emailField = useRef();
+  const oldPasswordField = useRef();
   const passwordField = useRef();
   const password2Field = useRef();
   const navigate = useNavigate();
@@ -18,61 +17,55 @@ export default function RegistrationPage() {
   const flash = useFlash();
 
   useEffect(() => {
-    usernameField.current.focus();
+    oldPasswordField.current.focus();
   }, []);
 
   const onSubmit = async (event) => {
     event.preventDefault();
     if (passwordField.current.value !== password2Field.current.value) {
-      setFormErrors({ password2: "Passwords don't match" });
+      setFormErrors({ password2: "New passwords don't match" });
     } else {
-      const data = await api.post("/users", {
-        username: usernameField.current.value,
-        email: emailField.current.value,
+      const response = await api.put("/me", {
+        old_password: oldPasswordField.current.value,
         password: passwordField.current.value,
       });
-      if (!data.ok) {
-        setFormErrors(data.body.errors.json);
-      } else {
+      if (response.ok) {
         setFormErrors({});
-        flash("You have successfully registered!", "success");
-        navigate("/login");
+        flash("Your password has been updated.", "success");
+        navigate("/me");
+      } else {
+        setFormErrors(response.body.errors.json);
       }
     }
   };
 
   return (
-    <Body>
-      <h1>Register</h1>
+    <Body sidebar>
+      <h1>Change Your Password</h1>
       <Form onSubmit={onSubmit}>
         <InputField
-          name="username"
-          label="Username"
-          error={formErrors.username}
-          fieldRef={usernameField}
-        />
-        <InputField
-          name="email"
-          label="Email address"
-          error={formErrors.email}
-          fieldRef={emailField}
+          name="oldPassword"
+          label="Old Password"
+          type="password"
+          error={formErrors.old_password}
+          fieldRef={oldPasswordField}
         />
         <InputField
           name="password"
-          label="Password"
+          label="New Password"
           type="password"
           error={formErrors.password}
           fieldRef={passwordField}
         />
         <InputField
           name="password2"
-          label="Password again"
+          label="New Password Again"
           type="password"
           error={formErrors.password2}
           fieldRef={password2Field}
         />
         <Button variant="primary" type="submit">
-          Register
+          Change Password
         </Button>
       </Form>
     </Body>

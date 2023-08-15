@@ -1,4 +1,4 @@
-import Button from 'react-bootstrap/Button';
+import Button from "react-bootstrap/Button";
 
 export default function More({ pagination, loadNextPage }) {
   let thereAreMore = false;
@@ -9,11 +9,11 @@ export default function More({ pagination, loadNextPage }) {
 
   return (
     <div className="More">
-      {thereAreMore &&
+      {thereAreMore && (
         <Button variant="outline-primary" onClick={loadNextPage}>
           More &raquo;
         </Button>
-      }
+      )}
     </div>
   );
 }

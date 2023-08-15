@@ -73,11 +73,14 @@
   margin-bottom: 15px;
 }
 
-.Sidebar a, .dropdown-item, .dropdown-item.active {
+.Sidebar a,
+.dropdown-item,
+.dropdown-item.active {
   color: #444;
 }
 
-.Sidebar .nav-item .active, .dropdown-item.active {
+.Sidebar .nav-item .active,
+.dropdown-item.active {
   background-color: #def;
 }
 

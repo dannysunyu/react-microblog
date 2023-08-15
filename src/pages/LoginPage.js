@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Body from '../components/Body';
-import InputField from '../components/InputField';
+import { useEffect, useRef, useState } from "react";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Body from "../components/Body";
+import InputField from "../components/InputField";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserProvider";
 import { useFlash } from "../contexts/FlashProvider";
@@ -27,10 +27,10 @@ export default function LoginPage() {
 
     const errors = {};
     if (!username) {
-      errors.username = 'Username must not be empty.';
+      errors.username = "Username must not be empty.";
     }
     if (!password) {
-      errors.password = 'Password must not be empty.';
+      errors.password = "Password must not be empty.";
     }
     setFormErrors(errors);
     if (Object.keys(errors).length > 0) {
@@ -38,10 +38,10 @@ export default function LoginPage() {
     }
 
     const result = await login(username, password);
-    if (result === 'fail') {
-      flash('Invalid username or password', 'danger');
-    } else if (result === 'ok') {
-      let next = '/';
+    if (result === "fail") {
+      flash("Invalid username or password", "danger");
+    } else if (result === "ok") {
+      let next = "/";
       if (location.state && location.state.next) {
         next = location.state.next;
       }
@@ -57,21 +57,24 @@ export default function LoginPage() {
           name="username"
           label="Username or email address"
           error={formErrors.username}
-          fieldRef={usernameField} />
+          fieldRef={usernameField}
+        />
         <InputField
           name="password"
           label="Password"
           type="password"
           error={formErrors.password}
-          fieldRef={passwordField} />
-        <Button
-          variant="primary"
-          type="submit">
+          fieldRef={passwordField}
+        />
+        <Button variant="primary" type="submit">
           Login
         </Button>
       </Form>
       <hr />
-      <p>Don&apos;t have an account? <Link to="/register">Register here</Link>!</p>
+      <p>Forgot your password? You can <Link to="/reset-request">reset it</Link>.</p>
+      <p>
+        Don&apos;t have an account? <Link to="/register">Register here</Link>!
+      </p>
     </Body>
   );
 }

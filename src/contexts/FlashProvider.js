@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from "react";
 
 export const FlashContext = createContext();
 let flashTimer;

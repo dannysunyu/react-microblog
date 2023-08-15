@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 const secondsTable = [
-  ['year', 60 * 60 * 24 * 365],
-  ['month', 60 * 60 * 24 * 30],
-  ['week', 60 * 60 * 24 * 7],
-  ['day', 60 * 60 * 24],
-  ['hour', 60 * 60],
-  ['minute', 60],
+  ["year", 60 * 60 * 24 * 365],
+  ["month", 60 * 60 * 24 * 30],
+  ["week", 60 * 60 * 24 * 7],
+  ["day", 60 * 60 * 24],
+  ["hour", 60 * 60],
+  ["minute", 60],
 ];
-const rtf = new Intl.RelativeTimeFormat(undefined, {numeric: 'auto'});
+const rtf = new Intl.RelativeTimeFormat(undefined, { numeric: "auto" });
 
 function getTimeAgo(date) {
   const seconds = Math.round((date.getTime() - new Date().getTime()) / 1000);
@@ -24,7 +24,7 @@ function getTimeAgo(date) {
   }
 
   if (!bestUnit) {
-    bestUnit = 'second';
+    bestUnit = "second";
     bestTime = parseInt(seconds / 10) * 10;
     bestInterval = 10;
   }
@@ -38,13 +38,11 @@ export default function TimeAgo({ isoDate }) {
 
   useEffect(() => {
     const timerId = setInterval(
-      () => setUpdate(update => update + 1),
-      interval * 1000
+      () => setUpdate((update) => update + 1),
+      interval * 1000,
     );
     return () => clearInterval(timerId);
   }, [interval]);
 
-  return (
-    <span title={date.toString()}>{rtf.format(time, unit)}</span>
-  );
+  return <span title={date.toString()}>{rtf.format(time, unit)}</span>;
 }
