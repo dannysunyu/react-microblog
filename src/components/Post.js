@@ -3,6 +3,7 @@ import Stack from "react-bootstrap/Stack";
 import Image from "react-bootstrap/Image";
 import { Link } from "react-router-dom";
 import TimeAgo from "./TimeAgo.js";
+import { memo } from "react";
 
 function Post({ post }) {
   return (
@@ -35,4 +36,4 @@ Post.propTypes = {
   }),
 };
 
-export default Post;
+export default memo(Post);
