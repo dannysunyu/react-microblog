@@ -13,7 +13,7 @@ export default function FlashMessage() {
           variant={flashMessage.type || "info"}
           dismissible
           onClose={hideFlash}
-        >
+          data-visible={visible}>
           {flashMessage.message}
         </Alert>
       </div>
